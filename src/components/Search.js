@@ -3,9 +3,40 @@ import axios from 'axios';
 
 const Search = () => {
     const [term, setTerm] = useState('Folklore (Taylor Swift album)');
+    const [debouncedTerm, setDebouncedTerm] = useState('Folklore (Taylor Swift album)');
     const [results, setResults] = useState([]);
 
     useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]);
+
+    useEffect(() => {
+        if (debouncedTerm) {
+            const search = async () => {
+                const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                    params: {
+                        action: 'query',
+                        list: 'search',
+                        origin: '*',
+                        format: 'json',
+                        srsearch: debouncedTerm
+                    }
+                });
+
+                setResults(data.query.search);
+            };
+
+            search();
+        }
+    }, [debouncedTerm]);
+
+    /**useEffect(() => {
         const search = async () => {
             const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
                 params: {
@@ -33,7 +64,7 @@ const Search = () => {
                 clearTimeout(timeoutId);
             };
         }
-    }, [term]);
+    }, [term, results.length]);**/
 
     const renderedResults = results.map((result) => {
         return (
@@ -42,6 +73,7 @@ const Search = () => {
                     <a
                         className="ui button"
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={`https://en.wikipedia.org?curid=${result.pageid}`}
                     >Go</a>
                 </div>

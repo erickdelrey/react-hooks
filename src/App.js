@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Accordion from './components/Accordion';
 import Search from './components/Search';
+import Dropdown from './components/Dropdown';
 
 
 const items = [
@@ -18,10 +19,30 @@ const items = [
     }
 ];
 
+const options = [
+    {
+        label: 'Vermillion',
+        value: '#e34234'
+    },
+    {
+        label: 'Blue Hydrangea',
+        value: '#90b0c5'
+    },
+    {
+        label: 'Marijuana Green',
+        value: '#499b4a'
+    }
+];
+
 export default () => {
+    const [selected, setSelected] = useState(options[0]);
     return (
         <div>
-            <Search/>
+            <Dropdown
+                selected={selected}
+                onSelectedChange={setSelected}
+                options={options}
+            />
         </div>
     );
 }
