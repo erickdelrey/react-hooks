@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import Accordion from './components/Accordion';
 import Search from './components/Search';
 import Dropdown from './components/Dropdown';
-
+import Translate from './components/Translate';
+import Route from './components/Route';
+import Header from './components/Header';
 
 const items = [
     {
@@ -36,17 +38,22 @@ const options = [
 
 export default () => {
     const [selected, setSelected] = useState(options[0]);
-    const [showDropdown, setShopDropdown] = useState(true);
 
     return (
         <div>
-            <button onClick={() => setShopDropdown(!showDropdown)}>Toggle Dropdown</button>
-            {showDropdown ?
-                <Dropdown
-                    selected={selected}
-                    onSelectedChange={setSelected}
-                    options={options}
-                /> : null}
+            <Header />
+            <Route path="/react-hooks/">
+                <Accordion items={items} />
+            </Route>
+            <Route path="/react-hooks/list">
+                <Search />
+            </Route>
+            <Route path="/react-hooks/dropdown">
+                <Dropdown label="Select a color"  options={options} selected={selected} onSelectedChange={setSelected}/>
+            </Route>
+            <Route path="/react-hooks/translate">
+                <Translate />
+            </Route>
         </div>
     );
 }
